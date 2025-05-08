@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yardeni Research Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .question {
+      margin-bottom: 2rem;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: #f1f1f1;
+      cursor: pointer;
+    }
+    .options button.correct {
+      background-color: #c8e6c9;
+    }
+    .options button.incorrect {
+      background-color: #ffcdd2;
+    }
+    .explanation {
+      display: none;
+      margin-top: 0.5rem;
+      font-style: italic;
+      color: #555;
+    }
+    .result {
+      font-weight: bold;
+      margin-top: 2rem;
+      text-align: center;
+    }
+    button.reset {
+      display: block;
+      margin: 2rem auto 0;
+      padding: 0.75rem 1.5rem;
+      background: #1e40af;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Yardeni Research Quiz</h1>
+    <div id="quiz"></div>
+    <div class="result" id="result"></div>
+    <button class="reset" onclick="resetQuiz()">Reset Quiz</button>
+  </div>
+  <script>
+    const questions = [
+      {
+        section: "Trade Policy & Stock Market",
+        question: "What impact did Trump’s April 2 tariffs have on the stock market?",
+        options: ["Boosted market sentiment", "Caused a sharp decline", "Had no visible impact", "Triggered global investments"],
+        answer: 1,
+        explanation: "The tariffs led to a steep selloff, causing the S&P 500 to tank on April 3-4."
+      },
+      {
+        section: "Trade Policy & Stock Market",
+        question: "Why did the S&P 500 rebound after April 8?",
+        options: ["Interest rate cuts", "Postponement of tariffs", "Stimulus checks", "Oil price stabilization"],
+        answer: 1,
+        explanation: "The rally came after Trump postponed the April 2 tariffs on April 8."
+      },
+      {
+        section: "Unemployment Insurance Claims",
+        question: "What is the current trend in initial jobless claims?",
+        options: ["Rising above 300k", "Falling to 228,000", "Flatlined at 275k", "Spiking due to inflation"],
+        answer: 1,
+        explanation: "Claims fell back to 228,000, signaling resilience despite trade pressures."
+      },
+      {
+        section: "Unemployment Insurance Claims",
+        question: "What does the data suggest about the labor market?",
+        options: ["Unstable", "Shrinking fast", "Still resilient", "Overheating"],
+        answer: 2,
+        explanation: "The claims data shows the labor market isn’t showing major cracks."
+      },
+      {
+        section: "Government Employment",
+        question: "Did the DOGE Boys significantly reduce federal headcount?",
+        options: ["Yes", "No", "Only in defense", "Only in Treasury"],
+        answer: 1,
+        explanation: "No strong evidence was shown in the unemployment charts."
+      },
+      {
+        section: "Government Employment",
+        question: "What does the federal unemployment chart indicate about layoffs?",
+        options: ["Huge surge", "Steady decline", "Flat trend", "Large reductions"],
+        answer: 2,
+        explanation: "Charts show stable levels, not significant increases."
+      },
+      {
+        section: "Continuing Claims & Labor Market Health",
+        question: "What do continuing unemployment claims indicate?",
+        options: ["High job churn", "Sustained unemployment", "Low jobless rate", "Wage pressure"],
+        answer: 2,
+        explanation: "They remain low, suggesting a healthy labor market."
+      },
+      {
+        section: "Continuing Claims & Labor Market Health",
+        question: "How do continuing claims relate to the broader unemployment rate?",
+        options: ["They are unrelated", "They mirror it", "They lag it", "They lead it"],
+        answer: 1,
+        explanation: "Continuing claims support the relatively low unemployment rate."
+      },
+      {
+        section: "Productivity and GDP",
+        question: "What caused the drop in Q1 productivity?",
+        options: ["Higher taxes", "Rising debt", "Tariff turmoil & labor hours rise", "Automation failures"],
+        answer: 2,
+        explanation: "Productivity dropped due to temporary disruption and labor hour increases."
+      },
+      {
+        section: "Productivity and GDP",
+        question: "What is Yardeni’s outlook on productivity?",
+        options: ["Weak for the decade", "Roaring 2020s outlook", "No change", "Stagnant growth"],
+        answer: 1,
+        explanation: "He still sees a Roaring 2020s scenario with tech-driven gains."
+      }
+    ];
+
+    const quizContainer = document.getElementById("quiz");
+    let score = 0;
+
+    questions.forEach((q, i) => {
+      const qDiv = document.createElement("div");
+      qDiv.classList.add("question");
+
+      const qHeader = document.createElement("h3");
+      qHeader.innerText = `${i + 1}. [${q.section}] ${q.question}`;
+      qDiv.appendChild(qHeader);
+
+      const optionsDiv = document.createElement("div");
+      optionsDiv.classList.add("options");
+
+      q.options.forEach((opt, j) => {
+        const btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.onclick = () => {
+          if (!btn.classList.contains("correct") && !btn.classList.contains("incorrect")) {
+            if (j === q.answer) {
+              btn.classList.add("correct");
+              score++;
+            } else {
+              btn.classList.add("incorrect");
+            }
+            exp.style.display = "block";
+            updateScore();
+          }
+        };
+        optionsDiv.appendChild(btn);
+      });
+      qDiv.appendChild(optionsDiv);
+
+      const exp = document.createElement("div");
+      exp.classList.add("explanation");
+      exp.innerText = `Explanation: ${q.explanation}`;
+      qDiv.appendChild(exp);
+
+      quizContainer.appendChild(qDiv);
+    });
+
+    function updateScore() {
+      document.getElementById("result").innerText = `Score: ${score} / ${questions.length}`;
+    }
+
+    function resetQuiz() {
+      window.location.reload();
+    }
+  </script>
+</body>
+</html>
